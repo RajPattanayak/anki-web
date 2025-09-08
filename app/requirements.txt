@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+anki           # (from pip, OR point to local pylib)
+sqlalchemy     # if you want user/deck assignment DB
+pydantic
