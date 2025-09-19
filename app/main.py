@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import decks, cards, study, stats, users
+from app.routers import decks, cards, study, stats, users, importer
 
 app = FastAPI(title="Anki Web API", version="0.1")
 
@@ -9,10 +9,7 @@ app.include_router(cards.router, prefix="/cards", tags=["Cards"])
 app.include_router(study.router, prefix="/study", tags=["Study"])
 app.include_router(stats.router, prefix="/stats", tags=["Stats"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
-
-# @app.get("/")
-# async def root():
-#     return {"message": "Welcome to Anki Web API"}
+app.include_router(importer.router, prefix="/import", tags=["Import"])
 
 @app.get("/")
 async def root():
@@ -20,9 +17,11 @@ async def root():
         "message": "Welcome to Anki Web API",
         "routes": [
             "/decks",
-            "/cards",
-            "/study",
-            "/stats",
-            "/users",
+            "/cards", 
+            "/study", 
+            "/stats", 
+            "/users", 
+            "/import"
         ],
     }
+

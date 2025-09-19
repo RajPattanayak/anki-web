@@ -1,21 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.services.anki_bridge import AnkiBridge
+from app.models.requests import CardCreateRequest
 
 router = APIRouter()
 bridge = AnkiBridge()
 
 @router.post("/")
-async def add_card(deck_name: str, front: str, back: str):
-    result = bridge.add_card(deck_name, front, back)
-    return {"message": "Card added", "card": result}
+async def add_card(payload: CardCreateRequest):
+    result = bridge.add_card(payload.deck_name, payload.front, payload.back)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return {"message": "Card added successfully", "data": result}
 
 @router.get("/{deck_name}")
 async def list_cards(deck_name: str):
-    col = bridge.col
-    deck_id = col.decks.id(deck_name)
-    cards = col.find_cards(f"deck:{deck_name}")
-    return {"deck": deck_name, "cards": cards}
-
+    result = bridge.list_cards(deck_name)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
 
 
 
