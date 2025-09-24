@@ -1,29 +1,28 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from typing import Optional
+from app.models.requests import StudyAnswerRequest
+from app.models.responses import StudyAnswerResponse
 from app.services.anki_bridge import AnkiBridge
 
 router = APIRouter()
 bridge = AnkiBridge()
 
-@router.post("/answer")
-async def answer_card(card_id: int, rating: int):
-    """
-    rating: 1=Again, 2=Hard, 3=Good, 4=Easy
-    """
-    col = bridge.col
-    card = col.get_card(card_id)
+@router.get("/next", summary="Get the next due card", response_model=dict)
+async def get_next(deck_name: Optional[str] = None):
+    try:
+        result = bridge.get_next_review_card(deck_name)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    # Call into Anki's scheduler
-    col.sched.answer_card(card, rating)
 
-    col.save()
-    return {
-        "card_id": card_id,
-        "rating": rating,
-        "new_interval": card.ivl,   # interval in days
-        "ease_factor": card.factor / 1000.0,  # ease factor
-        "due": card.due,
-        "type": card.type
-    }
+@router.post("/answer", response_model=StudyAnswerResponse, summary="Answer a card and update scheduler")
+async def answer_card(req: StudyAnswerRequest):
+    try:
+        result = bridge.answer_card(req.card_id, req.rating)
+        return StudyAnswerResponse(card_id=req.card_id, new_due=result.get("due"), ease_factor=None, status="answered")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 

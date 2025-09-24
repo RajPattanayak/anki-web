@@ -1,9 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.services.anki_bridge import AnkiBridge
 from anki.stats import Stats  # <-- Anki's built-in stats class
 
 router = APIRouter()
 bridge = AnkiBridge()
+
+@router.get("/", summary="Get collection stats")
+async def stats():
+    try:
+        return bridge.get_stats()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/")
 async def get_stats(deck_name: str = "All Decks"):
