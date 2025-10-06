@@ -1,4 +1,4 @@
-from anki.pylib.anki.collection import Collection
+from anki_root.pylib.anki.collection import Collection
 from typing import Any, Dict, List, Optional
 from pathlib import Path
 import threading

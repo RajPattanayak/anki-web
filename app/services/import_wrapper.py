@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Dict, Any
-from anki.pylib.anki.importing import AnkiPackageImporter
-from anki.pylib.anki.importing import TextImporter
+from anki_root.pylib.anki.importing import AnkiPackageImporter
+from anki_root.pylib.anki.importing import TextImporter
 # from anki.pylib.anki.importing import CsvFileImporter
 # from anki.pylib.anki.importing import AnkiPackageImporter
 from app.services.anki_bridge import AnkiBridge

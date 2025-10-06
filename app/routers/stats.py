@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.services.anki_bridge import AnkiBridge
-from anki.stats import Stats  # <-- Anki's built-in stats class
+from anki_root.stats import Stats  # <-- Anki's built-in stats class
 
 router = APIRouter()
 bridge = AnkiBridge()
