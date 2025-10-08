@@ -3,3 +3,5 @@ uvicorn
 anki           # (from pip, OR point to local pylib)
 sqlalchemy     # if you want user/deck assignment DB
 pydantic
+passlib[bcrypt]      # for password hashing
+python-jose[cryptography]  # for JWT tokens
